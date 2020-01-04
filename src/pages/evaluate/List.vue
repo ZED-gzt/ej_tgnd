@@ -1,5 +1,6 @@
 <template>
     <div>
+        <h2>评价内容显示</h2>
         <!--按钮-->
         <el-button type="success" size="small" @click="toAddHandler">添加</el-button>
         <el-button type="danger" size="small">批量删除</el-button>
@@ -26,13 +27,15 @@
        <!--/分页-->
        <!--模式框-->
        <el-dialog
-         title="录入顾客信息"
+         title="评价"
          :visible.sync="visible"
          width="60%">
          <el-form :model="form" label-width="80px"> 
              <el-form-item label="评论内容">
                  <el-input v-model="form.content"></el-input>
              </el-form-item>
+             <el-form-item label="评论时间"><el-input v-model="form.commentTime">
+                 </el-input></el-form-item>
          </el-form>
            ---{{form}}
          <span slot="footer" class="dialog-footer">
@@ -51,6 +54,9 @@ import { type } from 'os'
 export default {
     //用于存放网页中用于调用的方法
     methods:{
+            timeNow () {
+    return moment().utc().format('YYYY年MM月DD日') + ' ' + moment().utc().format('dddd')
+    },
         loadData(){
             let url="http://localhost:6677/comment/findAll"
         request.get(url).then((response)=>{
