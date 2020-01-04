@@ -104,7 +104,32 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/evaluate',
+    path: '/column',
+    component: Layout,
+    meta: { title: '产品管理', icon: 'table' },
+    children: [
+      {
+        path: 'List1',
+        name: 'columnList',
+        component: () => import('@/pages/system/column/List'),//@代表src
+        meta: { title: '栏目管理', icon: 'eye' }
+      },
+      {
+        path: 'List2',
+        name: 'product',
+        component: () => import('@/pages/system/product/List'),//@代表src
+        meta: { title: '产品管理', icon: 'tree' }
+      }
+    ]
+  },
+  // {
+  //   path: '/product',
+  //   component: Layout,
+  //   children: [
+    
+  //   ]
+  // },
+   { path: '/evaluate',
     component: Layout,
     children: [
       {

@@ -11,6 +11,7 @@
             <el-table-column label="总价" prop="total"> </el-table-column>
             <el-table-column label="状态" prop="status"> </el-table-column>
             <el-table-column label="顾客id" prop="customerId"> </el-table-column>
+             <el-table-column label="服务地址id" prop="addressId"> </el-table-column>
             <el-table-column fixed="right" label="操作" > 
                 <template v-slot="slot">
                     <a href="" @click.prevent="todeleteHandler(slot.row.id)">删除</a>
@@ -32,9 +33,9 @@
          width="60%">
          <el-form
           :model="form" label-width="80px">
-          <el-form-item label="订单编号">
+          <!-- <el-form-item label="订单编号">
               <el-input v-model="form.id"></el-input>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="下单时间">
               <el-input type="orderTime" v-model="form.orderTime"></el-input>
           </el-form-item>
@@ -46,6 +47,9 @@
           </el-form-item>
           <el-form-item label="顾客id">
               <el-input type="customerId" v-model="form.customerId"></el-input>
+          </el-form-item>
+           <el-form-item label="服务地址id">
+              <el-input type="addressId" v-model="form.addressId"></el-input>
           </el-form-item>
           </el-form>
           ----{{form}}
@@ -67,7 +71,7 @@ export default {
         loadData(){
             let url = "http://localhost:6677/order/findAll"
       request.get(url).then((response)=>{
-          this.order = response.data
+          this.order = response.data;
       })
         },
         submitHandler(){
@@ -99,8 +103,9 @@ export default {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(() => {
-            
+        }).then((response) => {
+          let url = "http://localhost:6677/order/deleteById?id="+id;
+          request.get(url).then((response)=>{
                 //   刷新
                
                 // 提示
@@ -110,16 +115,18 @@ export default {
               });
           this.loadData();
           });
-        
+        });
         },
         toupdateHandler(row){
             this.form = row;
             this.visible=true;
         },
         toAddHandler(){
+            
             this.form = {
                 type:"order"
-            }
+            };
+           
             this.visible=true;
         },
         closeModalHander(){
@@ -138,7 +145,7 @@ export default {
         // 文档加载完毕/vue实例创建完毕
         // this为当前Vue实例
         
-            this.loadData()
+            this.loadData();
         
     }
 }
