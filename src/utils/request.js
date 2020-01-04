@@ -42,10 +42,10 @@ service.interceptors.response.use(
    * Here is just an example
    * You can also judge the status by HTTP Status Code
    */
-  response => {
-    const res = response.data
-return res
-  },
+    response => {
+      const res = response.data
+        return res
+    },
   error => {
     console.log('err' + error) // for debug
     Message({
