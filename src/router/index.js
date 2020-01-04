@@ -74,7 +74,7 @@ export const constantRoutes = [
       {
         path: 'List',
         name: 'AddressList',
-        component: () => import('@/pages/customer/address/List'),//@代表src
+        component: () => import('@/pages/address/List'),//@代表src
         meta: { title: '地址管理', icon: 'user' }
       }
     ]
