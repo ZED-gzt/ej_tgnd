@@ -56,14 +56,26 @@ export const constantRoutes = [
   },
 
   {
-    path: '/costomer',
+    path: '/customer',
     component: Layout,
     children: [
       {
         path: 'List',
-        name: 'CostomerList',
+        name: 'CustomerList',
         component: () => import('@/pages/customer/List'),//@代表src
         meta: { title: '顾客管理', icon: 'user' }
+      }
+    ]
+  },
+  {
+    path: '/address',
+    component: Layout,
+    children: [
+      {
+        path: 'List',
+        name: 'AddressList',
+        component: () => import('@/pages/address/List'),//@代表src
+        meta: { title: '地址管理', icon: 'user' }
       }
     ]
   },
