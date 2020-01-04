@@ -56,18 +56,41 @@ export const constantRoutes = [
   },
 
   {
-    path: '/costomer',
+    path: '/customer',
     component: Layout,
     children: [
       {
         path: 'List',
-        name: 'CostomerList',
+        name: 'CustomerList',
         component: () => import('@/pages/customer/List'),//@代表src
         meta: { title: '顾客管理', icon: 'user' }
       }
     ]
   },
-  
+  {
+    path: '/address',
+    component: Layout,
+    children: [
+      {
+        path: 'List',
+        name: 'AddressList',
+        component: () => import('@/pages/address/List'),//@代表src
+        meta: { title: '地址管理', icon: 'user' }
+      }
+    ]
+  },
+  {
+    path: '/order',
+    component: Layout,
+    children: [
+      {
+        path: 'List',
+        name: 'order',
+        component: () => import('@/pages/order/List'),//@代表src
+        meta: { title: '订单管理', icon: 'user' }
+      }
+    ]
+  },
   {
     path: '/employee',
     component: Layout,
@@ -106,6 +129,17 @@ export const constantRoutes = [
     
   //   ]
   // },
+   { path: '/evaluate',
+    component: Layout,
+    children: [
+      {
+        path: 'List',
+        name: 'EvaluateList',
+        component: () => import('@/pages/evaluate/List'),//@代表src
+        meta: { title: '评论管理', icon: 'table' }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
