@@ -89,7 +89,18 @@ export const constantRoutes = [
       }
     ]
   },
-  
+  {
+    path: '/order',
+    component: Layout,
+    children: [
+      {
+        path: 'List',
+        name: 'order',
+        component: () => import('@/pages/order/List'),//@代表src
+        meta: { title: '订单管理', icon: 'user' }
+      }
+    ]
+  },
   {
     path: '/employee',
     component: Layout,
