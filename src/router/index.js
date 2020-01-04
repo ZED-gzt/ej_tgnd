@@ -68,6 +68,18 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/address',
+    component: Layout,
+    children: [
+      {
+        path: 'List',
+        name: 'AddressList',
+        component: () => import('@/pages/customer/address/List'),//@代表src
+        meta: { title: '地址管理', icon: 'user' }
+      }
+    ]
+  },
+  {
     path: '/order',
     component: Layout,
     children: [
