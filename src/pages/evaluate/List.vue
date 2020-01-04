@@ -5,7 +5,7 @@
         <el-button type="danger" size="small">批量删除</el-button>
         <!--/按钮-->
         <!--表格-->
-        <el-table :data="customers">
+        <el-table :data="comments">
             <el-table-column label="编号" prop="id"> </el-table-column>
             <el-table-column label="评价内容" prop="content"> </el-table-column>
             <el-table-column label="评价时间" prop="commentTime"> </el-table-column>
@@ -29,18 +29,9 @@
          title="录入顾客信息"
          :visible.sync="visible"
          width="60%">
-         <el-form :model="form" label-width="80px">
-             <el-form-item label="用户名">
-                 <el-input v-model="form.username"></el-input>
-             </el-form-item>
-             <el-form-item label="密码">
-                 <el-input v-model="form.password" type="password"></el-input>
-             </el-form-item>
-             <el-form-item label="真实姓名">
-                 <el-input v-model="form.realname"></el-input>
-             </el-form-item>
-             <el-form-item label="手机号码">
-                 <el-input v-model="form.telephone"></el-input>
+         <el-form :model="form" label-width="80px"> 
+             <el-form-item label="评论内容">
+                 <el-input v-model="form.content"></el-input>
              </el-form-item>
          </el-form>
            ---{{form}}
@@ -61,15 +52,15 @@ export default {
     //用于存放网页中用于调用的方法
     methods:{
         loadData(){
-            let url="http://localhost:6677/customer/findAll"
+            let url="http://localhost:6677/comment/findAll"
         request.get(url).then((response)=>{
-            this.customers=response.data;
+            this.comments=response.data;
         })
         },
         submitHandler(){
     
             //通过request与后台进行交互，并且携带参数
-             let url="http://localhost:6677/customer/saveOrUpdate"
+             let url="http://localhost:6677/comment/saveOrUpdate"
              request({
                  url,
                  method:"POST",
@@ -95,7 +86,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-            let url="http://localhost:6677/customer/deleteById?id="+id;
+            let url="http://localhost:6677/comment/deleteById?id="+id;
             request.get(url).then((response)=>{
                 //刷新sju 
                  this.$message({
@@ -125,7 +116,7 @@ export default {
     data(){
         return{
             visible:false,
-            customers:[],
+            comments:[],
             form:{}
 
         }
