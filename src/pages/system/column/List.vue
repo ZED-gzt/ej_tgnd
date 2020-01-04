@@ -36,12 +36,12 @@
            </el-form-item>
            <el-form-item label="父栏目">
            <template>
-  <el-select v-model="form.status" placeholder="请选择">
+  <el-select v-model="form.parentId" placeholder="请选择">
     <el-option
       v-for="item in options"
-      :key="item.value"
+      :key="item.id"
       :label="item.name"
-      :value="item.parentId">
+      :value="item.id">
     </el-option>
   </el-select>
 </template>
@@ -68,6 +68,7 @@ export default {
         request.get(url).then((response)=>{
             //将查询结果设置到columns中,this指向外部函数的this
             this.columns = response.data;
+            this.options=response.data;
         })
         },
         submitHandler(){
@@ -137,8 +138,8 @@ export default {
             visible:false,
             columns:[],
             form:{
-                type:"column"
-            }
+            },
+            options:[],
         }
     },
     created(){
