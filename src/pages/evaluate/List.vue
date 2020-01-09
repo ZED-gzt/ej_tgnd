@@ -37,7 +37,6 @@
              <el-form-item label="评论时间"><el-input v-model="form.commentTime">
                  </el-input></el-form-item>
          </el-form>
-           ---{{form}}
          <span slot="footer" class="dialog-footer">
          <el-button @click="closeModalHander" size="small">取 消</el-button>
          <el-button type="primary" @click="submitHandler" size="small">确 定</el-button>

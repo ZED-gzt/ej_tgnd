@@ -1,12 +1,18 @@
 <template>
 
     <div>
-        <!--按钮-->
-        <el-button type="success" size="small" @click="toAddHandler">添加</el-button>
-        <el-button type="danger" size="small" @click="todeleteHandler">批量删除</el-button>
+       
+    <template>
+  <el-tabs v-model="params.status" @tab-click="loadData"> 
+    <el-tab-pane label="全部" name="全部"></el-tab-pane>
+    <el-tab-pane label="待派单" name="待派单"></el-tab-pane>
+    <el-tab-pane label="待接单" name="待接单"></el-tab-pane>
+    <el-tab-pane label="待服务" name="待服务"></el-tab-pane>
+     <el-tab-pane label="待确认" name="待确认"></el-tab-pane>
+      <el-tab-pane label="已完成" name="已完成"></el-tab-pane>
+  </el-tabs>
+</template>
         
-        <!--/按钮-->
-        <!--表格-->
         <el-table :data="order.list">
             <el-table-column label="订单编号" prop="id"> </el-table-column>
             <el-table-column label="下单时间" prop="orderTime"> </el-table-column>
@@ -14,10 +20,11 @@
             <el-table-column label="状态" prop="status"> </el-table-column>
             <el-table-column label="顾客id" prop="customerId"> </el-table-column>
              <el-table-column label="服务地址id" prop="addressId"> </el-table-column>
+             <el-table-column label="员工id" prop="waiterId"> </el-table-column>
             <el-table-column fixed="right" label="操作" > 
                 <template v-slot="slot">
-                    <a href="" @click.prevent="todeleteHandler(slot.row.id)">删除</a>
-                    <a href="" @click.prevent="toupdateHandler (slot.row)" >修改</a>
+                    <a href="javascript:void(0)" >详情</a>
+                    <a href=""  v-if="slot.row.status==='待派单'" @click.prevent="toSendOrderandler (slot.row)" >派单</a>
                 </template>
             </el-table-column>
             
@@ -32,48 +39,25 @@
        <!--/分页-->
         <!--模式框-->
        <el-dialog
-         title="录入订单信息"
+         title="派单"
          :visible.sync="visible"
          width="60%">
-         <el-form
-          :model="form" label-width="80px">
-          <!-- <el-form-item label="订单编号">
-              <el-input v-model="form.id"></el-input>
-          </el-form-item> -->
-          <el-form-item label="下单时间">
-              <el-input type="orderTime" v-model="form.orderTime"></el-input>
-          </el-form-item>
-          <el-form-item label="总价">
-              <el-input type="total" v-model="form.total"></el-input>
-          </el-form-item>
-          <el-form-item label="状态">
-              <el-input type="status" v-model="form.status"></el-input>
-          </el-form-item>
-          <!-- <el-form-item label="顾客id">
-              <el-input type="customerId" v-model="form.customerId"></el-input>
-          </el-form-item>
-           <el-form-item label="服务地址id">
-              <el-input type="addressId" v-model="form.addressId"></el-input>
-          </el-form-item> -->
-          <el-form-item label="顾客id">
-                    <el-select v-model="form.status" placeholder="请选择">
-                        <el-option v-for="a in order"
-                            :key="a.value" :label="a.name"
-                            :value="a.parentId">
-                        </el-option>
-                    </el-select>
-                </el-form-item> 
-                <el-form-item label="服务地址id">
-                    <el-select v-model="form.status" placeholder="请选择">
-                        <el-option v-for="b in order"
-                            :key="b.value" :label="b.name"
-                            :value="b.parentId">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-          </el-form>
-          ----{{form}}
-         <span>这是一段信息</span>
+         <div>
+             <p><strong>订单编号：</strong>{{form.id}}</p>
+             <p><strong>订单总价：</strong>{{form.total}}</p>
+             <p><strong>下单时间：</strong>{{form.orderTime}}</p>
+             <p><strong>服务员工：</strong>
+             <el-radio-group v-model="waiterId">
+                <el-radio v-for="e in employees"
+                         :key="e.id"
+                         :label="e.id"
+                         border
+                         size="small">{{e.realname}}</el-radio>
+                
+            </el-radio-group></p>
+         </div>
+        
+         
          <span slot="footer" class="dialog-footer">
          <el-button @click="closeModalHander" size="small">取 消</el-button>
          <el-button type="primary" @click="submitHandler" size="small">确 定</el-button>
@@ -97,6 +81,9 @@ export default {
         
            loadData(){
       let url = "http://localhost:6677/order/queryPage"
+      if(this.params.status==="全部"){
+          delete this.params.status;
+      }
       request({
           url,
           method:"post",
@@ -111,15 +98,14 @@ export default {
     },
         submitHandler(){
 
-            let url = "http://localhost:6677/order/save"
+            let url = "http://localhost:6677/order/sendOrder"
             request({
                 url,
-                method:"POST",
-                headers:{
-                "Content-Type": "application/x-www-form-urlencoded"
-                
-                },
-                data:querystring.stringify(this.form)
+                method:"GET",
+                params:{
+                    orderId:this.form.id,
+                    waiterId:this.waiterId
+                }
             }).then((response)=>{
                 this.closeModalHander();
                 this.$message({
@@ -130,31 +116,9 @@ export default {
                 this.visible=false;
                  this.loadData();
             })
-        
                     },
-        todeleteHandler(id){
-            //确认
-             this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then((response) => {
-          let url = "http://localhost:6677/order/deleteById?id="+id;
-          request.get(url).then((response)=>{
-                //   刷新
-               
-                // 提示
-                this.$message({           
-            type: 'success',
-            message: '删除成功！'+id
-              });
-          this.loadData();
-          });
-        });
-        },
-        toupdateHandler(row){
-    
-          
+        //去派单
+        toSendOrderandler(row){
             this.form = row;
             this.visible=true;
           
@@ -169,6 +133,13 @@ export default {
         },
         closeModalHander(){
             this.visible=false;
+        },
+        //加载员工信息
+        loadEmployees(){
+            let url="http://localhost:6677/waiter/findAll";
+            request.get(url).then(response=>{
+                this.employees=response.data;
+            })
         }
     },
     //用于存放要向网页中显示的数据
@@ -176,20 +147,20 @@ export default {
         return{
             visible:false,
             order:{},
-           form:{
-      },
+           form:{},//当前订单信息
       params:{
           page:0,
-          pageSize:10
-      }
+          pageSize:10,
+      },
+      employees:[],
+      waiterId:null//选中的员工
     }
   },
     created(){
         // 文档加载完毕/vue实例创建完毕
         // this为当前Vue实例
-        
             this.loadData();
-        
+            this.loadEmployees();
     }
 }
 </script>
